@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Melody listening</title>
+    <script src="https://unpkg.com/jspsych@7.3.1"></script> <!--loads jspsych library remotely-->
+    <script src="https://unpkg.com/@jspsych/plugin-audio-keyboard-response@1.1.2"></script> <!--loads audio keyboard response-->
+    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.2"></script> <!--plugin for printing a message-->
+    <link href="https://unpkg.com/jspsych@7.3.1/css/jspsych.css" rel="stylesheet" type="text/css" /> <!--stylesheet for visual aesthetics-->
+  </head>
+  <body></body>
+
+  <!-- initializes jspsych by assigning it to a constant-->
+  <script>
+    const jsPsych = initJsPsych();
+
+    var timeline = [];
+
+    
+
+    var welcome = {
+        /*plugin loaded to display text and make text disappear with next key stroke*/ 
+      type: jsPsychHtmlKeyboardResponse, /*put type of plugin here*/
+      stimulus: 'Welcome! Press any key to begin.'
+    };
+    timeline.push(welcome)
+
+    var exposure_stimuli = [/*these aren't actually the correct responses
+    but I should make them correct later as a way of making sure people are paying attention*/
+    { stimulus: "mp3_exposure/stream1.mp3", correct_response: 'y'}, 
+    { stimulus: "mp3_exposure/stream2.mp3", correct_response: 'n'},
+    { stimulus: "mp3_exposure/stream3.mp3", correct_response: 'n'},
+    { stimulus: "mp3_exposure/stream4.mp3", correct_response: 'y'},
+    { stimulus: "mp3_exposure/stream5.mp3", correct_response: 'y'},
+    { stimulus: "mp3_exposure/stream6.mp3", correct_response: 'y'},
+    { stimulus: "mp3_exposure/stream8.mp3", correct_response: 'y'},
+    { stimulus: "mp3_exposure/stream10.mp3", correct_response: 'n'},
+  ];
+
+  var test_stimuli = [
+    { stimulus: "mp3_test/test_correct2.mp3", correct_response: '1'}, 
+    { stimulus: "mp3_test/test_correct3.mp3", correct_response: '1'},
+    { stimulus: "mp3_test/test_correct4.mp3", correct_response: '1'},
+    { stimulus: "mp3_test/test_correct5.mp3", correct_response: '1'},
+    { stimulus: "mp3_test/test_incorrect6.mp3", correct_response: '2'},
+    { stimulus: "mp3_test/test_incorrect7.mp3", correct_response: '2'},
+    { stimulus: "mp3_test/test_incorrect8.mp3", correct_response: '2'},
+    { stimulus: "mp3_test/test_incorrect9.mp3", correct_response: '2'},
+  ];
+
+    var exposure_trial = {
+        type: jsPsychAudioKeyboardResponse,
+        stimulus: jsPsych.timelineVariable('stimulus'),
+        /*response_ends_trial: true,*/
+        prompt: 'Did the melody end on a high note? Y for yes, N for no.',
+        choices: ['y', 'n']
+    };
+
+    var exposure_procedure = {
+      timeline: [exposure_trial],
+      timeline_variables: exposure_stimuli,
+      repetitions: 1,
+      randomize_order: true 
+    }
+    timeline.push(exposure_procedure)
+
+    var test_trial = {
+        type: jsPsychAudioKeyboardResponse,
+        stimulus: jsPsych.timelineVariable('stimulus'),
+        /*response_ends_trial: true,*/
+        prompt: 'Did you prefer the first melody (press 1) or the second melody (press 2)?',
+        choices: ['1', '2']
+    };
+
+    var test_procedure = {
+      timeline: [test_trial],
+      timeline_variables: test_stimuli,
+      repetitions: 1,
+      randomize_order: true 
+    }
+    timeline.push(test_procedure)
+
+    jsPsych.run(timeline); /*function to run the trial, takes a timeline as an argument and in this case it's just hello world*/
+  </script>
+</html>
